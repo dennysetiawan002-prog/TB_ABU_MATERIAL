@@ -1,0 +1,372 @@
+<!DOCTYPE html>  <html lang="id">  
+<head>  
+  <meta charset="UTF-8">  
+  <title>Kasir Abu Material</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">    <!-- PWA -->    <link rel="manifest" href="manifest.json">  
+  <meta name="theme-color" content="#1976d2">    <style>  
+    * { box-sizing: border-box; }  
+    body {  
+      margin: 0;  
+      font-family: system-ui, Arial, sans-serif;  
+      background: #f2f2f2;  
+    }  
+  
+    /* ===== HEADER ===== */  
+    .app-header {  
+      position: fixed;  
+      top: 0;  
+      left: 0;  
+      right: 0;  
+      height: 56px;  
+      background: #1976d2;  
+      color: #fff;  
+      padding: 8px 12px;  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: center;  
+      z-index: 1000;  
+    }  
+  
+    .app-title {  
+      font-size: 16px;  
+      font-weight: bold;  
+      line-height: 1.2;  
+    }  
+  
+    .app-sub {  
+      font-size: 12px;  
+      opacity: .9;  
+    }  
+  
+    .menu-btn {  
+      font-size: 22px;  
+      cursor: pointer;  
+    }  
+  
+    /* ===== DROPDOWN MENU ===== */  
+    .dropdown {  
+      position: fixed;  
+      top: 56px;  
+      right: 10px;  
+      background: #fff;  
+      border-radius: 8px;  
+      box-shadow: 0 4px 10px rgba(0,0,0,.2);  
+      display: none;  
+      z-index: 2000;  
+      overflow: hidden;  
+    }  
+  
+    .dropdown button {  
+      display: block;  
+      width: 100%;  
+      padding: 10px 14px;  
+      border: none;  
+      background: none;  
+      text-align: left;  
+      cursor: pointer;  
+    }  
+  
+    .dropdown button:hover {  
+      background: #f0f0f0;  
+    }  
+  
+    /* ===== CONTENT ===== */  
+    .content {  
+      padding: 70px 12px 80px;  
+    }  
+  
+    section { display: none; }  
+    section.active { display: block; }  
+  
+    .card {  
+      background: #fff;  
+      padding: 12px;  
+      border-radius: 10px;  
+      margin-bottom: 12px;  
+    }  
+  
+    /* ===== BOTTOM NAV ===== */  
+    .bottom-nav {  
+      position: fixed;  
+      bottom: 0;  
+      left: 0;  
+      right: 0;  
+      height: 60px;  
+      background: #fff;  
+      border-top: 1px solid #ddd;  
+      display: flex;  
+      z-index: 1000;  
+    }  
+  
+    .nav-item {  
+      flex: 1;  
+      text-align: center;  
+      font-size: 12px;  
+      padding-top: 6px;  
+      cursor: pointer;  
+      color: #555;  
+    }  
+  
+    .nav-item.active {  
+      color: #1976d2;  
+      font-weight: bold;  
+    }  
+  
+    /* ===== INSTALL PROMPT ===== */  
+    .install-overlay {  
+      position: fixed;  
+      inset: 0;  
+      background: rgba(0,0,0,.5);  
+      display: none;  
+      justify-content: center;  
+      align-items: center;  
+      z-index: 3000;  
+    }  
+  
+    .install-card {  
+      background: #fff;  
+      padding: 20px;  
+      border-radius: 14px;  
+      width: 90%;  
+      max-width: 320px;  
+      text-align: center;  
+    }  
+  
+    .install-card button {  
+      width: 100%;  
+      margin-top: 8px;  
+      padding: 10px;  
+      border: none;  
+      border-radius: 8px;  
+      font-size: 14px;  
+    }  
+  
+    .btn-primary {  
+      background: #1976d2;  
+      color: #fff;  
+    }  
+  
+    .btn-secondary {  
+      background: #eee;  
+    }  
+  </style>  </head>  
+<body>  <!-- ===== HEADER ===== -->  <div class="app-header">  
+  <div>  
+    <div class="app-title">Kasir Abu Material</div>  
+    <div class="app-sub" id="userInfo">-</div>  
+  </div>  
+  <div class="menu-btn" onclick="toggleMenu()">⋮</div>  
+</div>  <!-- ===== DROPDOWN ===== -->  <div class="dropdown" id="dropdownMenu">  
+  <button onclick="showEarning()">💰 Lihat Earning</button>  
+  <button onclick="openSetting()">⚙️ Setting</button>  
+  <button onclick="resetUser()">🔁 Ganti User</button>  
+</div>  <!-- ===== CONTENT ===== -->  <div class="content">    <section id="page-home" class="active">  
+    <div class="card">  
+      <h3>Selamat datang 👋</h3>  
+      <p>Pilih menu di bawah untuk mulai.</p>  
+    </div>  
+  </section>    <section id="page-pelanggan">    <div class="card">  
+    <h3>➕ Tambah Pelanggan</h3>  <input id="nama" placeholder="Nama Toko">  
+<input id="nama_pemilik" placeholder="Nama Pemilik">  
+<input id="alamat" placeholder="Alamat Lengkap">  
+
+<div style="display:flex;gap:6px">  
+  <input id="hp" placeholder="No HP" style="flex:1">  
+  <button onclick="pilihKontak()">📇</button>  
+</div>  
+
+<button onclick="simpanPelanggan()" style="margin-top:8px">  
+  💾 Simpan Pelanggan  
+</button>
+
+  </div>    <div class="card">  
+    <div style="display:flex;justify-content:space-between;align-items:center">  
+      <h3>📋 Daftar Pelanggan</h3>  
+      <button onclick="updatePelanggan()">🔄</button>  
+    </div>  <ul id="listPelanggan"></ul>
+
+  </div>  </section>    <section id="page-produk">    <!-- FORM TAMBAH PRODUK -->    <div class="card" id="formProduk" style="display:none">  
+    <h3>➕ Tambah Produk</h3>  <input id="nama_produk" placeholder="Nama Produk">  
+<input id="supplier" placeholder="Supplier">  
+
+<select id="satuan">  
+  <option value="">Pilih Satuan</option>  
+  <option>pcs</option>  
+  <option>dus</option>  
+  <option>batang</option>  
+  <option>gulungan</option>  
+</select>  
+
+<select id="jenis_ukuran">  
+  <option value="">Jenis Ukuran</option>  
+  <option>berat</option>  
+  <option>panjang</option>  
+  <option>dimensi</option>  
+</select>  
+
+<input id="nilai_ukuran" placeholder="Nilai Ukuran (contoh: 25 kg)">  
+<input id="harga_modal" placeholder="Harga Modal">  
+<input id="harga_jual" placeholder="Harga Jual">  
+<input id="stok" placeholder="Stok (opsional)">  
+
+<input type="file" id="foto" accept="image/*">  
+
+<button onclick="simpanProduk()" style="margin-top:8px">  
+  💾 Simpan Produk  
+</button>
+
+  </div>    <!-- DAFTAR PRODUK -->    <div class="card">  
+    <div style="display:flex;justify-content:space-between;align-items:center">  
+      <h3>📦 Daftar Produk</h3>  
+      <button onclick="updateProduk()">🔄</button>  
+    </div>  <input  
+  type="text"  
+  id="searchProduk"  
+  placeholder="🔍 Cari produk..."  
+  oninput="filterProduk()"  
+  style="width:100%;padding:8px;margin:8px 0"  
+>  
+
+<ul id="listProduk"></ul>
+
+  </div>  </section>    <section id="page-pesanan">    <h2>🧾 Menu Pesanan</h2>    <!-- FORM INPUT -->    <div class="card">  
+    <label>Nama Pelanggan</label>  
+    <input type="text" id="inputPelanggan" placeholder="Ketik nama pelanggan">  
+    <div id="listPelanggan" class="suggest"></div>  <label>Produk</label>  
+<input type="text" id="inputProduk" placeholder="Ketik nama produk">  
+<div id="listProduk" class="suggest"></div>  
+
+<label>Jumlah</label>  
+<input type="number" id="inputQty" placeholder="Jumlah">  
+
+<button id="btnTambah">Tambah ke Pesanan</button>
+
+  </div>    <!-- PESANAN SEMENTARA -->    <div class="card">  
+    <table>  
+      <thead>  
+        <tr>  
+          <th>Produk</th>  
+          <th class="right">Qty</th>  
+          <th class="right">Harga</th>  
+          <th class="right">Subtotal</th>  
+          <th>Aksi</th>  
+        </tr>  
+      </thead>  
+      <tbody id="listItem">  
+        <tr>  
+          <td colspan="5" style="text-align:center;color:#888">  
+            Belum ada item  
+          </td>  
+        </tr>  
+      </tbody>  
+    </table>  <div class="total">  
+  Total: Rp 0  
+</div>
+
+  </div>  <button id="btnKirimPesanan">Kirim Pesanan</button>
+
+  <h3>Daftar Pesanan</h3>  
+  <table border="1" width="100%" id="tabelPesanan">  
+    <thead>  
+      <tr>  
+        <th>No Pesanan</th>  
+        <th>Tanggal</th>  
+        <th>Nama Toko</th>  
+        <th>Total</th>  
+        <th>Status</th>  
+        <th>Aksi</th>  
+      </tr>  
+    </thead>  
+    <tbody></tbody>  
+  </table>  </section>    <section id="page-price">  
+    <div class="card"><h3>Price List</h3></div>  
+  </section>  </div>  <!-- ===== BOTTOM NAV ===== -->  <div class="bottom-nav">  
+  <div class="nav-item active" onclick="nav('home')">🏠<br>Home</div>  
+  <div class="nav-item" onclick="nav('pelanggan')">👥<br>Pelanggan</div>  
+  <div class="nav-item" onclick="nav('produk')">📦<br>Produk</div>  
+  <div class="nav-item" onclick="nav('pesanan')">🧾<br>Pesanan</div>  
+  <div class="nav-item" onclick="nav('price')">📋<br>Harga</div>  
+</div>  <!-- ===== INSTALL PROMPT ===== -->  <div class="install-overlay" id="installBox">  
+  <div class="install-card">  
+    <h3>📲 Pasang Aplikasi</h3>  
+    <p>Tambahkan ke layar utama agar lebih cepat dibuka.</p>  
+    <button class="btn-primary" onclick="installApp()">Tambahkan</button>  
+    <button class="btn-secondary" onclick="closeInstall()">Nanti saja</button>  
+  </div>  
+
+
+<!-- MATIKAN DULU -->
+<!--
+<script src="js/cache.js"></script>
+<script src="js/setup.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/produk.js"></script>
+<script src="js/pelanggan.js"></script>
+<script src="js/price_list.js"></script>
+<script src="js/setting.js"></script>
+-->
+
+<!-- YANG AKTIF HANYA INI -->
+<script src="js/api.js"></script>
+<script src="js/pesanan.js"></script>
+
+<script>
+/* ===== USER INFO ===== */  
+document.getElementById("userInfo").innerText =  
+  localStorage.getItem("nama_sales") + " • " +  
+  (localStorage.getItem("role_sales") || "").toUpperCase();  
+  
+/* ===== NAV ===== */  
+function nav(page) {  
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));  
+  event.currentTarget.classList.add("active");  
+  
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));  
+  document.getElementById("page-" + page).classList.add("active");  
+}  
+  
+/* ===== MENU ===== */  
+function toggleMenu() {  
+  const d = document.getElementById("dropdownMenu");  
+  d.style.display = d.style.display === "block" ? "none" : "block";  
+}  
+  
+function showEarning() {  
+  alert("Earning akan dihitung dari data pesanan (next step)");  
+}  
+  
+function openSetting() {  
+  alert("Menu setting");  
+}  
+  
+function resetUser() {  
+  localStorage.clear();  
+  location.reload();  
+}  
+  
+/* ===== INSTALL PROMPT ===== */  
+let deferredPrompt = null;  
+  
+window.addEventListener("beforeinstallprompt", e => {  
+  e.preventDefault();  
+  deferredPrompt = e;  
+  
+  if (!localStorage.getItem("install_dismissed")) {  
+    document.getElementById("installBox").style.display = "flex";  
+  }  
+});  
+  
+function closeInstall() {  
+  document.getElementById("installBox").style.display = "none";  
+  localStorage.setItem("install_dismissed", "1");  
+}  
+  
+async function installApp() {  
+  if (!deferredPrompt) return;  
+  deferredPrompt.prompt();  
+  await deferredPrompt.userChoice;  
+  deferredPrompt = null;  
+  closeInstall();  
+}  
+</script>  </body>  
+</html>
