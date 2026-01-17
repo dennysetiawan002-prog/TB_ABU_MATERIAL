@@ -3,7 +3,73 @@
   <meta charset="UTF-8">  
   <title>Kasir Abu Material</title>  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">    <!-- PWA -->    <link rel="manifest" href="manifest.json">  
-  <meta name="theme-color" content="#1976d2">    <style>  
+  <meta name="theme-color" content="#1976d2">    
+
+
+
+<style> 
+
+/* ===== Input HP + Tombol Kontak ===== */
+.hp-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.hp-row input {
+  flex: 1;
+}
+
+.btn-kontak {
+  width: 44px !important;
+  height: 44px;
+  padding: 0;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+/* ===== FORM STYLE (WhatsApp-like) ===== */
+.card input,
+.card select,
+.card button {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-top: 6px;
+}
+
+.card input:focus,
+.card select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+/* tombol aksi utama */
+.btn-primary-action {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+/* tombol sekunder */
+.btn-secondary-action {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  font-weight: 600;
+}
+
+/* jarak antar blok */
+.card label {
+  font-size: 13px;
+  color: #555;
+  margin-top: 10px;
+  display: block;
+}
+ 
     * { box-sizing: border-box; }  
     body {  
       margin: 0;  
@@ -70,10 +136,18 @@
       background: #f0f0f0;  
     }  
   
-    /* ===== CONTENT ===== */  
-    .content {  
-      padding: 70px 12px 80px;  
-    }  
+    /* ===== CONTENT ===== */
+.content {
+  position: fixed;
+  top: 56px;        /* tinggi header */
+  bottom: 60px;     /* tinggi bottom nav */
+  left: 0;
+  right: 0;
+
+  padding: 12px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+} 
   
     section { display: none; }  
     section.active { display: block; }  
@@ -148,9 +222,64 @@
   
     .btn-secondary {  
       background: #eee;  
-    }  
-  </style>  </head>  
-<body>  <!-- ===== HEADER ===== -->  <div class="app-header">  
+    }
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ===== TABEL RESPONSIVE PESANAN ===== */
+.table-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+#tabelPesanan {
+  border-collapse: collapse;
+  min-width: 700px; /* biar rapi di HP */
+  font-size: 13px;
+}
+
+#tabelPesanan th,
+#tabelPesanan td {
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap;
+}
+/* ===== TOMBOL AKSI DI TABEL PESANAN ===== */
+.aksi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+
+  border: 1px solid #1976d2;
+  background: #e3f2fd;
+  color: #1976d2;
+
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.aksi-btn + .aksi-btn {
+  margin-left: 6px;
+}
+
+/* khusus edit (opsional beda warna tipis) */
+.aksi-edit {
+  background: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+} 
+  </style>
+</head>  
+<body>
+<!-- ===== HEADER ===== -->
+<div class="app-header">  
   <div>  
     <div class="app-title">Kasir Abu Material</div>  
     <div class="app-sub" id="userInfo">-</div>  
@@ -170,9 +299,9 @@
 <input id="nama_pemilik" placeholder="Nama Pemilik">  
 <input id="alamat" placeholder="Alamat Lengkap">  
 
-<div style="display:flex;gap:6px">  
-  <input id="hp" placeholder="No HP" style="flex:1">  
-  <button onclick="pilihKontak()">📇</button>  
+<div class="hp-row">
+  <input id="hp" placeholder="No HP">
+  <button type="button" class="btn-kontak" onclick="pilihKontak()">📇</button>
 </div>  
 
 <button onclick="simpanPelanggan()" style="margin-top:8px">  
@@ -263,22 +392,35 @@
   Total: Rp 0  
 </div>
 
-  </div>  <button id="btnKirimPesanan">Kirim Pesanan</button>
+  </div>  
 
-  <h3>Daftar Pesanan</h3>  
-  <table border="1" width="100%" id="tabelPesanan">  
-    <thead>  
-      <tr>  
-        <th>No Pesanan</th>  
-        <th>Tanggal</th>  
-        <th>Nama Toko</th>  
-        <th>Total</th>  
-        <th>Status</th>  
-        <th>Aksi</th>  
-      </tr>  
-    </thead>  
-    <tbody></tbody>  
-  </table>  </section>    <section id="page-price">  
+<div class="card">
+<button id="btnKirimPesanan" class="btn-primary-action">
+  Kirim Pesanan
+</button>
+</div>
+
+  <h3>Daftar Pesanan</h3>
+
+<div class="table-scroll">
+  <table id="tabelPesanan">
+    <thead>
+      <tr>
+        <th>No Pesanan</th>
+        <th>Tanggal</th>
+        <th>Nama Toko</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+ 
+</section>    
+<section id="page-price">  
     <div class="card"><h3>Price List</h3></div>  
   </section>  </div>  <!-- ===== BOTTOM NAV ===== -->  <div class="bottom-nav">  
   <div class="nav-item active" onclick="nav('home')">🏠<br>Home</div>  
@@ -317,12 +459,14 @@ document.getElementById("userInfo").innerText =
   (localStorage.getItem("role_sales") || "").toUpperCase();  
   
 /* ===== NAV ===== */  
-function nav(page) {  
-  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));  
-  event.currentTarget.classList.add("active");  
+function nav(page) {
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  event.currentTarget.classList.add("active");
+
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById("page-" + page).classList.add("active");
+
   
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));  
-  document.getElementById("page-" + page).classList.add("active");  
 }  
   
 /* ===== MENU ===== */  
@@ -369,5 +513,4 @@ async function installApp() {
   closeInstall();  
 }  
 </script>  </body>  
-
 </html>
