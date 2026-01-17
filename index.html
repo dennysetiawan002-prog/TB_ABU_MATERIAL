@@ -246,35 +246,82 @@ html, body {
   text-align: left;
   white-space: nowrap;
 }
-/* ===== TOMBOL AKSI DI TABEL PESANAN ===== */
-.aksi-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 
+/* ===== TOMBOL AKSI TABEL ===== */
+.btn-aksi {
   padding: 6px 10px;
   font-size: 12px;
   border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin: 2px 2px;
+  font-weight: 600;
+}
 
-  border: 1px solid #1976d2;
+/* rincian */
+.btn-detail {
   background: #e3f2fd;
   color: #1976d2;
-
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
 }
 
-.aksi-btn + .aksi-btn {
-  margin-left: 6px;
-}
-
-/* khusus edit (opsional beda warna tipis) */
-.aksi-edit {
+/* edit */
+.btn-edit {
   background: #1976d2;
   color: #fff;
-  border-color: #1976d2;
-} 
+}
+
+/* hover ringan */
+.btn-aksi:hover {
+  opacity: 0.9;
+}
+
+/* ===== MODAL DETAIL PESANAN ===== */
+#detailPesananModal .install-card {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#detailPesananModal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+#detailPesananModal th,
+#detailPesananModal td {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+/* ===== MODAL ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 4000;
+}
+
+.modal-box {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  z-index: 5000;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
   </style>
 </head>  
 <body>
@@ -428,7 +475,9 @@ html, body {
   <div class="nav-item" onclick="nav('produk')">📦<br>Produk</div>  
   <div class="nav-item" onclick="nav('pesanan')">🧾<br>Pesanan</div>  
   <div class="nav-item" onclick="nav('price')">📋<br>Harga</div>  
-</div>  <!-- ===== INSTALL PROMPT ===== -->  <div class="install-overlay" id="installBox">  
+
+</div>  <!-- ===== INSTALL PROMPT ===== -->
+  <div class="install-overlay" id="installBox">  
   <div class="install-card">  
     <h3>📲 Pasang Aplikasi</h3>  
     <p>Tambahkan ke layar utama agar lebih cepat dibuka.</p>  
@@ -436,6 +485,42 @@ html, body {
     <button class="btn-secondary" onclick="closeInstall()">Nanti saja</button>  
   </div>  
 
+
+
+
+<!-- ===== MODAL RINCIAN PESANAN ===== -->
+<div id="modalRincian" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:5000;
+  padding:16px;
+">
+
+  <div style="
+    background:#fff;
+    border-radius:14px;
+    max-width:420px;
+    margin:60px auto;
+    padding:16px;
+  ">
+
+    <h3 style="margin-top:0">📄 Rincian Pesanan</h3>
+
+    <div id="modalRincianBody">
+      <!-- isi dari JS -->
+    </div>
+
+    <button
+      class="btn-secondary-action"
+      style="margin-top:12px"
+      onclick="tutupModalRincian()">
+      Tutup
+    </button>
+
+  </div>
+</div>
 
 <!-- MATIKAN DULU -->
 <!--
@@ -512,5 +597,10 @@ async function installApp() {
   deferredPrompt = null;  
   closeInstall();  
 }  
-</script>  </body>  
+</script>  
+
+
+
+
+</body>  
 </html>
